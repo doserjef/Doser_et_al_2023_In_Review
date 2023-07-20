@@ -1,0 +1,16 @@
+code/archived/
+documents/
+get-convergence
+get-svc-convergence
+code/testing/
+figures/
+data/BBS/
+data/bbs-raw-data.rda
+data/ppt.rda
+data/bird-life-data.rda
+data/pred-tmax.rda
+data/lulc-data/
+data/range.data.rda
+data/bbs-data-y-det-covs.rda
+data/tmax.rda
+data/prediction-range-binary.rda
