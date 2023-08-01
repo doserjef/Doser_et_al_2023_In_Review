@@ -1,6 +1,6 @@
-# Single-species and multi-species spatially-varying coefficient occupancy models
+# Modeling complex species-environment relationships through spatially-varying coefficient occupancy models
 
-### In Prep
+### In Review
 
 ### Jeffrey W. Doser, Andrew O. Finley, Sarah P. Saunders, Marc K&eacute;ry, Aaron S. Weed, Elise F. Zipkin
 

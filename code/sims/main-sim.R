@@ -16,8 +16,7 @@ J.x <- 20
 J.y <- 20
 J <- J.x * J.y
 # Replicates
-# n.rep <- sample(5, J, replace = TRUE)
-n.rep <- rep(5, J)
+n.rep <- rep(3, J)
 # Occurrence coefficients -------------
 beta <- c(0, 0)
 # Detection coefficients --------------
@@ -31,7 +30,7 @@ sigma.sq.vals <- c(0.1, 0.5, 1, 2)
 phi.vals <- c(3 / .1, 3 / .5, 3 / .8, 3 / 3, 3 / 100)
 # Values for spatially-varying intercept
 sigma.sq.int <- 1
-phi.int <- 3 / 0.4
+phi.int <- 3 / 0.8
 # Total number of simulation scenarios (note the + 1 to add a constant effect)
 n.scenarios <- length(sigma.sq.vals) * length(phi.vals) + 1
 scenario.vals <- expand.grid(sigma.sq = sigma.sq.vals, phi = phi.vals)
@@ -95,7 +94,7 @@ for (j in 1:n.sims) {
     prior.list <- list(beta.normal = list(mean = 0, var = 2.72), 
     		       alpha.normal = list(mean = 0, var = 2.72), 
     		       sigma.sq.ig = list(a = 2, b = 1), 
-                       phi.unif = list(a = 3 / 1, b = 3 / 0.05)) 
+                       phi.unif = list(a = 3 / 1, b = 3 / .05)) 
     # Starting values
     z.init <- apply(y, 1, function(a) as.numeric(sum(a, na.rm = TRUE) > 0))
     inits.list <- list(beta = 0, alpha = 0, sigma.sq = 1, phi = 3 / 0.5,
@@ -162,17 +161,17 @@ for (j in 1:n.sims) {
 
     # Non-spatial model 
     out.3 <- PGOcc(occ.formula = ~ occ.cov.1, 
-		   det.formula = ~ det.cov.1,
-		   data = data.list,
-		   n.samples = n.batch * batch.length,
-		   inits = inits.list,
-		   priors = prior.list.2,
-		   n.omp.threads = 1, # Change as desired
-		   verbose = TRUE,
-		   n.report = 1000,
-		   n.burn = n.burn, 
-		   n.thin = n.thin,
-		   n.chains = 1, 
+        	   det.formula = ~ det.cov.1,
+        	   data = data.list,
+        	   n.samples = n.batch * batch.length,
+        	   inits = inits.list,
+        	   priors = prior.list.2,
+        	   n.omp.threads = 1, # Change as desired
+        	   verbose = TRUE,
+        	   n.report = 1000,
+        	   n.burn = n.burn, 
+        	   n.thin = n.thin,
+        	   n.chains = 1, 
                    k.fold = 4, 
                    k.fold.threads = 4)
     psi.mean.samples[, j, i, 3] <- apply(out.3$psi.samples, 2, mean)

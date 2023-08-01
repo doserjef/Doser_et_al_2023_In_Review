@@ -46,7 +46,15 @@ plot.deviance %>%
 
 # Assessment of WAIC ------------------------------------------------------
 # Average WAIC score across all simulations
-waic.avg <- apply(waic.vals, c(2, 3), mean)
+waic.diff <- array(NA, dim = dim(waic.vals))
+for (i in 1:nrow(waic.vals)) {
+  for (j in 1:ncol(waic.vals)) {
+    waic.diff[i, j, ] <- waic.vals[i, j, ] - waic.vals[i, j, 1]
+  }
+}
+waic.avg <- apply(waic.diff, c(2, 3), mean)
+waic.low <- apply(waic.diff, c(2, 3), quantile, 0.025)
+waic.high <- apply(waic.diff, c(2, 3), quantile, 0.975)
 plot.waic <- data.frame(phi = factor(rep(c(scenario.vals$phi, NA), times = n.models)),
 			    sigma.sq = factor(rep(c(scenario.vals$sigma.sq, NA), times = n.models)),
 			    waic = c(waic.avg) - waic.avg[, 1],

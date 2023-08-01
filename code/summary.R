@@ -25,6 +25,13 @@ usa <- st_union(st_make_valid(usa))
 
 # Summarize hold out assessments with AUC ---------------------------------
 sp.names <- dimnames(data.list$y)[[1]]
+sp.full.names <- c('Western Meadowlark', 'Eastern Meadowlark', 
+		   'Upland Sandpiper', 'Grasshopper Sparrow', 'Long-billed Curlew', 
+		   "Swainson's Hawk", 'Ferruginous Hawk', 'Scissor-tailed Flycatcher', 
+		   'Eastern Kingbird', 'Western Kingbird', 'Horned Lark', 
+		   'Bobolink', 'Chestnut-collared Longspur', 'Vesper Sparrow', 
+		   'Savannah Sparrow', 'Clay-colored Sparrow', "Cassin's Sparrow", 
+		   'Dickcissel', 'Lark Bunting', 'Loggerhead Shrike', 'Sedge Wren')
 N <- length(sp.names)
 
 # Read in auc values for all the candidate models
@@ -77,7 +84,7 @@ auc.plot.df <- apply(auc.df, 1, function(a) a - max(a))
 # Generate a plot ---------------------
 n.cand <- 8
 auc.long.df <- data.frame(auc = c(auc.plot.df), 
-			  species = rep(sp.names, each = n.cand), 
+			  species = rep(sp.full.names, each = n.cand), 
                           model = factor(c('SS', 'SS-INT', 
 				           'SS-SVC', 'SS-INT-SVC', 
 				           'MS', 'MS-INT', 
@@ -89,7 +96,7 @@ auc.long.df <- data.frame(auc = c(auc.plot.df),
 				           'MS-SVC', 'MS-INT-SVC'))))
 auc.long.df$val <- c(t(auc.df))
 for (i in 1:N) {
-  auc.long.df[which(auc.long.df$species == sp.names[i]), 'val'] <- ifelse(auc.long.df[which(auc.long.df$species == sp.names[i]), 'val'] == auc.max.by.sp[i], auc.long.df[which(auc.long.df$species == sp.names[i]), 'val'], NA)
+  auc.long.df[which(auc.long.df$species == sp.full.names[i]), 'val'] <- ifelse(auc.long.df[which(auc.long.df$species == sp.full.names[i]), 'val'] == auc.max.by.sp[i], auc.long.df[which(auc.long.df$species == sp.full.names[i]), 'val'], NA)
 }
 # Generate Figure S2
 ggplot(auc.long.df, aes(x = model, y = species, fill = auc)) + 
@@ -107,7 +114,7 @@ ggplot(auc.long.df, aes(x = model, y = species, fill = auc)) +
 	legend.title = element_text(size = 14),
         text = element_text(family="LM Roman 10"), 
         axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave(file = 'figures/Figure-S2.png', width = 7, height = 8, units = 'in', bg = 'white')
+ggsave(file = 'figures/Figure-S2.png', width = 8, height = 8, units = 'in', bg = 'white')
 
 # Summarize model fit with WAIC -------------------------------------------
 
@@ -135,7 +142,7 @@ apply(waic.df, 1, which.min)
 # Generate plot of results ------------
 waic.min.by.sp <- apply(waic.df, 1, min)
 waic.plot.df <- apply(waic.df, 1, function(a) (a - min(a)))
-colnames(waic.plot.df) <- sp.names
+colnames(waic.plot.df) <- sp.full.names
 # waic.plot.df <- apply(waic.df, 1, function(a) (a - min(a)) / min(a))
 waic.sum.all <- apply(waic.df, 2, sum)
 waic.plot.df <- cbind(waic.plot.df, waic.sum.all)
@@ -144,8 +151,8 @@ waic.plot.df <- cbind(waic.plot.df, waic.sum.all)
 # Number of candidate models
 n.cand <- 8
 waic.long.df <- data.frame(waic = c(waic.plot.df), 
-			  species = factor(rep(c(sp.names, 'COMM'), each = n.cand), 
-					   levels = c('COMM', sort(sp.names)), order = TRUE),
+			  species = factor(rep(c(sp.full.names, 'Community'), each = n.cand), 
+					   levels = c('Community', sort(sp.full.names)), order = TRUE),
                           model = factor(c('SS', 'SS-INT', 
 				           'SS-SVC', 'SS-INT-SVC', 
 				           'MS', 'MS-INT', 
@@ -157,8 +164,8 @@ waic.long.df <- data.frame(waic = c(waic.plot.df),
 				           'MS-SVC', 'MS-INT-SVC'))))
 waic.long.df$val <- NA
 for (i in 1:N) {
-  waic.long.df[which(waic.long.df$species == sp.names[i]), 'val'] <- ifelse(waic.long.df[which(waic.long.df$species == sp.names[i]), 'waic'] < 2, '*', NA)
-  waic.long.df[which(waic.long.df$species == sp.names[i]), 'waic'] <- waic.long.df[which(waic.long.df$species == sp.names[i]), 'waic'] / waic.min.by.sp[i]
+  waic.long.df[which(waic.long.df$species == sp.full.names[i]), 'val'] <- ifelse(waic.long.df[which(waic.long.df$species == sp.full.names[i]), 'waic'] < 2, '*', NA)
+  waic.long.df[which(waic.long.df$species == sp.full.names[i]), 'waic'] <- waic.long.df[which(waic.long.df$species == sp.full.names[i]), 'waic'] / waic.min.by.sp[i]
 }
 # Do it separately for the community sum
 waic.long.df[(nrow(waic.long.df) - n.cand + 1):nrow(waic.long.df), 'waic'] <- (waic.long.df[(nrow(waic.long.df) - n.cand + 1):nrow(waic.long.df), 'waic'] - min(waic.sum.all))
@@ -181,7 +188,7 @@ ggplot(waic.long.df, aes(x = model, y = species, fill = waic)) +
 	legend.title = element_text(size = 14),
         text = element_text(family="LM Roman 10"), 
         axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave(file = 'figures/Figure-2.png', width = 7, height = 8, units = 'in', bg = 'white')
+ggsave(file = 'figures/Figure-2.png', width = 8, height = 8, units = 'in', bg = 'white')
 
 # Summarize model results from best performing model ----------------------
 # The full posterior distributions for all model parameters are too big for GitHub, 
