@@ -16,6 +16,8 @@ Occupancy models are frequently used by ecologists to quantify spatial variation
 
 ## Repository Directory
 
+All model results were generated using `spOccupancy` v0.7.0. This version is available for download from [GitHub](https://github.com/doserjef/spOccupancy) and will be avialable on CRAN in mid-August 2023.  
+
 ### [code](./code)
 
 Contains all code used in the BBS case study and simulation study
