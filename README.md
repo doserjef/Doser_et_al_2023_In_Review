@@ -1,6 +1,6 @@
 # Modeling complex species-environment relationships through spatially-varying coefficient occupancy models
 
-### In Review
+### Journal of Agricultural, Biological, and Environmental Statistics
 
 ### Jeffrey W. Doser, Andrew O. Finley, Sarah P. Saunders, Marc K&eacute;ry, Aaron S. Weed, Elise F. Zipkin
 
@@ -16,7 +16,7 @@ Occupancy models are frequently used by ecologists to quantify spatial variation
 
 ## Repository Directory
 
-All model results were generated using `spOccupancy` v0.7.0. This version is available for download from [GitHub](https://github.com/doserjef/spOccupancy) and will be available on CRAN in mid-August 2023.  
+All model results were generated using `spOccupancy` v0.7.0.  
 
 ### [code](./code)
 

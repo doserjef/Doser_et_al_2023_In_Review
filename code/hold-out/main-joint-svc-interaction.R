@@ -52,7 +52,6 @@ out <- svcMsPGOcc(occ.formula = ~ scale(grass) * scale(tmax),
                n.chains = n.chains)
 
 # Predict at hold out locations -------------------------------------------
-# NOTE: you're only predicting at sites within a given species range.
 load('data/hold-out-pred-data.rda')
 coords.0 <- data.list.pred$coords
 X.0 <- data.frame(intercept = 1,

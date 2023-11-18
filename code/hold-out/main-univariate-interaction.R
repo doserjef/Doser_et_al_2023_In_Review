@@ -93,5 +93,5 @@ for (j in 1:n.samples) {
 } # j (iteration)
 
 # Save AUC values ---------------------------------------------------------
-save(auc.vals, file = paste('results/univariate-interaction/', curr.sp, '-auc-hold-out-samples.rda', 
+save(auc.vals, file = paste('results/univariate-interaction/', curr.sp, '-auc-hold-out-samples.rda',
 			    sep = ''))

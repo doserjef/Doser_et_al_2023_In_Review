@@ -172,7 +172,7 @@ waic.long.df[(nrow(waic.long.df) - n.cand + 1):nrow(waic.long.df), 'waic'] <- (w
 waic.long.df[(nrow(waic.long.df) - n.cand + 1):nrow(waic.long.df), 'val'] <- ifelse(waic.long.df[(nrow(waic.long.df) - n.cand + 1):nrow(waic.long.df), 'waic'] < 2, '*', NA)
 waic.long.df[(nrow(waic.long.df) - n.cand + 1):nrow(waic.long.df), 'waic'] <- (waic.long.df[(nrow(waic.long.df) - n.cand + 1):nrow(waic.long.df), 'waic'] / min(waic.sum.all))
 
-# Figure 2
+# Figure 3
 ggplot(waic.long.df, aes(x = model, y = species, fill = waic)) + 
   geom_tile(color = 'black') +
   scale_fill_gradientn("Proportional\nchange in WAIC", colors = brewer.reds(1000),
@@ -188,7 +188,7 @@ ggplot(waic.long.df, aes(x = model, y = species, fill = waic)) +
 	legend.title = element_text(size = 14),
         text = element_text(family="LM Roman 10"), 
         axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave(file = 'figures/Figure-2.png', width = 8, height = 8, units = 'in', bg = 'white')
+ggsave(file = 'figures/Figure-3.png', width = 8, height = 8, units = 'in', bg = 'white')
 
 # Summarize model results from best performing model ----------------------
 # The full posterior distributions for all model parameters are too big for GitHub, 
@@ -243,7 +243,7 @@ plot.df <- plot.df %>%
   arrange(desc(mean.val))
 plot.df$species <- factor(plot.df$species, levels = unique(plot.df$species), order = TRUE)
 
-# Generate Figure 3
+# Generate Figure 4
 ggplot(plot.df, aes(x = species, y = prop, fill = type)) +
   geom_bar(stat = 'identity', width = 1, color = 'grey') +
   theme_bw(base_size = 16) +
@@ -257,7 +257,7 @@ ggplot(plot.df, aes(x = species, y = prop, fill = type)) +
  	legend.position = 'bottom') +
   labs(x = 'Species', y = 'Proportion of Sites',
        fill = '')
-ggsave(file = 'figures/Figure-3.png', units = 'in', device = 'png', 
+ggsave(file = 'figures/Figure-4.png', units = 'in', device = 'png', 
        width = 10, height = 5, bg = 'white')
 
 # Generate summary figures for each species -------------------------------
@@ -345,7 +345,7 @@ for (i in 1:N) {
           legend.title = element_text(size = 12),
   	plot.title = element_text(size = 18),
           legend.text = element_text(size = 12))
-  # Generate Supplemental Figures S4-S22, as well as Figure 4 and 5 in the main text
+  # Generate Supplemental Figures S4-S22, as well as Figures 5 and 6 in the main text
   plot(ggarrange(tmax.plot, tmax.prob.plot, psi.plot, psi.ci.plot))
   ggsave(file = paste0('figures/species-figs/', sp.names[i], '-plot.png'), device = 'png', units = 'in', 
          width = 13, height = 9.5, bg = 'white')
@@ -361,7 +361,7 @@ point.plot <- ggplot(coords.sf) +
 	 title = '(A) BBS Locations') +
   theme(text = element_text(family = 'LM Roman 10'),
 	plot.title = element_text(size = 13))
-# Combined with maps of covariates to form Figure 1 later in the script
+# Combined with maps of covariates to form Figure 2 later in the script
 plot.df <- data.frame(x = coords.0[, 1], 
 		      y = coords.0[, 2], 
 		      tmax = tmax.0, 
@@ -397,9 +397,9 @@ grass.plot <- ggplot() +
 	plot.title = element_text(size = 13),
         legend.title = element_text(size = 12),
         legend.text = element_text(size = 12))
-# Figure 1
+# Figure 2
 ggarrange(point.plot, tmax.plot, grass.plot, ncol = 1)
-ggsave(file = 'figures/Figure-1.png', device = 'png', height = 12, width = 6, units = 'in', 
+ggsave(file = 'figures/Figure-2.png', device = 'png', height = 12, width = 6, units = 'in', 
        bg = 'white')
 
 # Assess interaction between max temperature and grassland effect ---------

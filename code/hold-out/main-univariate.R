@@ -66,7 +66,6 @@ out <- spPGOcc(occ.formula = ~ scale(grass) + scale(tmax),
                n.chains = n.chains)
 
 # Predict at hold out locations -------------------------------------------
-# NOTE: you're only predicting at sites within a given species range.
 load('data/hold-out-pred-data.rda')
 coords.0 <- data.list.pred$coords
 X.0 <- as.matrix(data.frame(intercept = 1, 
@@ -89,5 +88,5 @@ for (j in 1:n.samples) {
 } # j (iteration)
 
 # Save AUC values ---------------------------------------------------------
-save(auc.vals, file = paste('results/univariate-constant/', curr.sp, '-auc-hold-out-samples.rda', 
+save(auc.vals, file = paste('results/univariate-constant/', curr.sp, '-auc-hold-out-samples.rda',
 			    sep = ''))

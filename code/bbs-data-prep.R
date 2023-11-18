@@ -25,7 +25,7 @@ library(wildlifeR)
 #   lapply(read.csv) %>%
 #   bind_rows()
 # # Get associated route data
-# route.dat <- read.csv("data/BBS/routes.csv")
+ route.dat <- read.csv("data/BBS/routes.csv")
 # # Note that route id is nested within state. 
 # # Join BBS data with route data
 # bbs.dat <- left_join(bbs.dat, route.dat, by = c('Route', 'CountryNum', 'StateNum'))

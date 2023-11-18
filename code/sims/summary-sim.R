@@ -32,40 +32,87 @@ scenario.vals <- expand.grid(sigma.sq = sigma.sq.vals, phi = phi.vals)
 deviance.avg <- apply(deviance.vals, c(2, 3), mean)
 deviance.low <- apply(deviance.vals, c(2, 3), quantile, 0.025)
 deviance.high <- apply(deviance.vals, c(2, 3), quantile, 0.975)
-plot.deviance <- data.frame(phi = factor(rep(c(scenario.vals$phi, NA), times = n.models)),
-			    sigma.sq = factor(rep(c(scenario.vals$sigma.sq, NA), times = n.models)),
-			    deviance = c(deviance.avg) - deviance.avg[, 1],
+plot.deviance <- data.frame(phi = factor(rep(c(scenario.vals$phi, 0), times = n.models)),
+			    sigma.sq = factor(rep(c(scenario.vals$sigma.sq, 0), times = n.models)),
+			    # deviance = c(deviance.avg) - deviance.avg[, 1],
+			    deviance = c(deviance.avg),
 			    type = factor(rep(c('SVC', 'SVI', 'OCC'), each = n.scenarios), 
 			                  levels = c('OCC', 'SVI', 'SVC'), ordered = TRUE))
 # levels(plot.deviance$phi) <- c('High Range', 'Medium Range', 'Low Range')
 # levels(plot.deviance$sigma.sq) <- c('Low Variance', 'Medium Low Variance', 'Medium High Variance', 'High Variance')
 
-# This is part of Table 1
+# Deviance results from simulation study.
 plot.deviance %>%
   arrange(desc(phi), sigma.sq, type)
 
 # Assessment of WAIC ------------------------------------------------------
 # Average WAIC score across all simulations
-waic.diff <- array(NA, dim = dim(waic.vals))
-for (i in 1:nrow(waic.vals)) {
-  for (j in 1:ncol(waic.vals)) {
-    waic.diff[i, j, ] <- waic.vals[i, j, ] - waic.vals[i, j, 1]
-  }
-}
-waic.avg <- apply(waic.diff, c(2, 3), mean)
-waic.low <- apply(waic.diff, c(2, 3), quantile, 0.025)
-waic.high <- apply(waic.diff, c(2, 3), quantile, 0.975)
-plot.waic <- data.frame(phi = factor(rep(c(scenario.vals$phi, NA), times = n.models)),
-			    sigma.sq = factor(rep(c(scenario.vals$sigma.sq, NA), times = n.models)),
-			    waic = c(waic.avg) - waic.avg[, 1],
+# waic.diff <- array(NA, dim = dim(waic.vals))
+# for (i in 1:nrow(waic.vals)) {
+#   for (j in 1:ncol(waic.vals)) {
+#     waic.diff[i, j, ] <- waic.vals[i, j, ] - waic.vals[i, j, 1]
+#   }
+# }
+waic.avg <- apply(waic.vals, c(2, 3), mean)
+waic.low <- apply(waic.vals, c(2, 3), quantile, 0.025)
+waic.high <- apply(waic.vals, c(2, 3), quantile, 0.975)
+plot.waic <- data.frame(phi = factor(rep(c(scenario.vals$phi, 0), times = n.models)),
+			    sigma.sq = factor(rep(c(scenario.vals$sigma.sq, 0), times = n.models)),
+			    waic = c(waic.avg),
 			    type = factor(rep(c('SVC', 'SVI', 'OCC'), each = n.scenarios), 
 			                  levels = c('OCC', 'SVI', 'SVC'), ordered = TRUE))
 # levels(plot.waic$phi) <- c('High Range', 'Medium Range', 'Low Range')
 # levels(plot.waic$sigma.sq) <- c('Low Variance', 'Medium Low Variance', 'Medium High Variance', 'High Variance')
 # 
-# This is the other part of Table 1
+# WAIC results from simulation study.
 plot.waic %>%
   arrange(desc(phi), sigma.sq, type)
+
+# Create overall figure to summarize simulations --------------------------
+# Get rid of the no SVC case for the figure
+plot.deviance.small <- plot.deviance %>%
+  filter(phi != 0)
+plot.waic.small <- plot.waic %>%
+  filter(phi != 0)
+plot.df <- left_join(plot.deviance.small, plot.waic.small, by = c('phi', 'sigma.sq', 'type'))
+plot.long.df <- data.frame(val = c(plot.df$deviance, plot.df$waic),
+			   phi = rep(plot.df$phi, 2),
+			   sigma.sq = rep(plot.df$sigma.sq, 2),
+			   type = rep(plot.df$type, 2),
+			   criterion = rep(c('Deviance', 'WAIC'), each = nrow(plot.df)))
+plot.long.df <- plot.long.df %>%
+  mutate(phi = factor(rep(scenario.vals$phi, n.models * 2),
+		      levels = c(30, 10, 3.75, 1, 0.03), ordered = TRUE, 
+		#       labels = c('ESR = 10%', 'ESR = 30%', 'ESR = 80%', 
+		# 		 'ESR = 300%', 'ESR = 10,000%')),
+		      labels = c(expression(paste("ESR", " = 10%")), 
+				 expression(paste("ESR", " = 30%")), 
+				 expression(paste("ESR", " = 80%")), 
+				 expression(paste("ESR", " = 300%")), 
+				 expression(paste("ESR", " = 10,000%")))), 
+		#       labels = c(expression(paste(phi, " = 3 / .1")), 
+		# 		 expression(paste(phi, " = 3 / .3")), 
+		# 		 expression(paste(phi, " = 3 / .8")), 
+		# 		 expression(paste(phi, " = 3 / 3")), 
+		# 		 expression(paste(phi, " = 3 / 100")))), 
+	 sigma.sq = factor(rep(scenario.vals$sigma.sq, n.models * 2), 
+			   labels = c(expression(paste(sigma, " "^2, " = 0.1")), 
+				      expression(paste(sigma, " "^2, " = 0.5")),
+				      expression(paste(sigma, " "^2, " = 1.0")),
+				      expression(paste(sigma, " "^2, " = 2.0"))))) 
+
+ggplot(data = plot.long.df, aes(x = type, y = val, col = criterion, group = criterion)) + 
+  geom_point() + 
+  geom_line() +
+  scale_color_manual(values = c('#B2182B', '#2166AC')) + 
+  facet_grid(phi ~ sigma.sq, 
+             labeller = label_parsed) + 
+  theme_bw() + 
+  theme(panel.grid = element_blank(), 
+        text = element_text(family = 'LM Roman 10'), 
+	legend.position = 'bottom') +
+  labs(x = 'Model', y = 'Value', col = 'Criterion')
+ggsave(file = 'figures/Figure-1.png', device = 'png', units = 'in', width= 8, height = 7)
 
 # Figure of spatial range and spatial variance ----------------------------
 # This code creates Figure S1, which gives an example of how the spatial
