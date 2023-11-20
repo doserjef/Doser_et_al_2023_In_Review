@@ -1,8 +1,10 @@
 # Modeling complex species-environment relationships through spatially-varying coefficient occupancy models
 
+### Jeffrey W. Doser, Andrew O. Finley, Sarah P. Saunders, Marc K&eacute;ry, Aaron S. Weed, Elise F. Zipkin
+
 ### Journal of Agricultural, Biological, and Environmental Statistics
 
-### Jeffrey W. Doser, Andrew O. Finley, Sarah P. Saunders, Marc K&eacute;ry, Aaron S. Weed, Elise F. Zipkin
+### Code/Data DOI: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10159508.svg)](https://doi.org/10.5281/zenodo.10159508)
 
 ### spOccupancy Package [Website](https://www.jeffdoser.com/files/spoccupancy-web/) and [Repository](https://github.com/doserjef/spOccupancy/)
 
